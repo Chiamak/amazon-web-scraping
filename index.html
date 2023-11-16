@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="search-prod">
+       <h1>AMAZON SEARCH PRODUCTS</h1>
+        <div class="search-bar">
+            <input type="text" placeholder="Search keyword..." id="ele" value="">
+            <button type="vutton" onclick="handleSubmit()">search</button>
+        </div>
+    </div>
+    
+    <section id="amazon-prod"></section>
+
+    <script>
+        const inp = document.getElementById('ele');
+        //onclick function
+        function handleSubmit(){
+            //the input value
+        const inpv = inp.value;
+
+        // Creating a XMLHttpRequest object 
+        let xhr = new XMLHttpRequest();
+     
+        // Making our connection  
+        let url = `http://localhost:8000/prod/${inpv}`;
+        xhr.open("GET", url, true);
+     
+        // function execute after request is successful 
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                //container to append the response
+                const sect = document.getElementById('amazon-prod');
+                const arr = JSON.parse(this.responseText);
+                arr.forEach(elem => {
+                    const eat =
+                    `
+                    <div>
+                        <img src='${elem.imgs}' alt="an image">
+                        <h1>${elem.ga}</h1>
+                        <span>${elem.rev}</span>
+                        <p>${elem.numrev} reviews</p>
+                    </div>
+                    `
+                    sect.innerHTML += eat;
+                });
+            }
+        }
+        // Sending our request 
+        xhr.send();
+    }
+    </script>
+</body>
+</html>
